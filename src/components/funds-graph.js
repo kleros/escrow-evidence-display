@@ -119,7 +119,7 @@ const FundsGraph = ({
         <Circle style={{background: "#009AFF"}}/> <IndexText>Amount unlocked by sender</IndexText>
       </IndexContainer>
       <IndexContainer style={{color: "#F60C36", textAlign: "center"}}>
-        <Circle style={{background: "#F60C36"}}/> <IndexText> Amount in dispute </IndexText>
+        <Circle style={{background: "#F60C36"}}/> <IndexText> Amount in escrow </IndexText>
       </IndexContainer>
       <IndexContainer style={{color: "#4D00B4", textAlign: "right"}}>
         <Circle style={{background: "#4D00B4"}}/> <IndexText> Amount waived by receiver </IndexText>

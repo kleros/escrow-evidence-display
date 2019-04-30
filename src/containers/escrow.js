@@ -41,20 +41,18 @@ class EscrowDisplay extends Component {
     )
 
     const {
-      disputeID,
+      transactionID,
       arbitrableContractAddress,
       arbitratorContractAddress
     } = message
 
-    if (!arbitrableContractAddress || !disputeID || !arbitratorContractAddress)
+    if (!arbitrableContractAddress || !transactionID || !arbitratorContractAddress)
       return
 
     const escrowContractInstance = new web3.eth.Contract(
       EscrowContract.abi,
       arbitrableContractAddress
     )
-
-    const transactionID = await escrowContractInstance.methods.disputeIDtoTransactionID(disputeID).call()
 
     const transaction = await escrowContractInstance.methods.transactions(transactionID).call()
     transaction.payments = []
@@ -77,7 +75,7 @@ class EscrowDisplay extends Component {
     })
 
     if (metaEvidenceEvents.length < 1)
-      throw new Error(`No MetaEvidece for dispute ${disputeID}`)
+      throw new Error(`No MetaEvidece for transaction ${transactionID}`)
 
     const metaEvidenceJSON = await axios.get(metaEvidenceEvents[0].returnValues._evidence.replace(
       /^\/ipfs\//,
