@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { Component } from 'react'
 import styled from 'styled-components/macro'
 import Web3 from 'web3'
@@ -6,8 +7,7 @@ import FundsGraph from '../components/funds-graph'
 import SettlementHistory from '../components/settlement-history'
 import EscrowContract from '../assets/contracts/escrow.json'
 
-const web3 = new Web3(window.web3.currentProvider || 'https://kovan.infura.io')
-
+const web3 = new Web3(window.web3 ? (window.web3.currentProvider || 'https://mainnet.infura.io/v3/668b3268d5b241b5bab5c6cb886e4c61') : 'https://mainnet.infura.io/v3/668b3268d5b241b5bab5c6cb886e4c61')
 // Global CSS
 const EscrowEvidence = styled.div`
   margin: 0;
@@ -68,7 +68,23 @@ class EscrowDisplay extends Component {
       }
     })
 
-    let totalAmount = web3.utils.toBN(transaction.amount)
+    const metaEvidenceEvents = await escrowContractInstance.getPastEvents('MetaEvidence', {
+      fromBlock: 0,
+      toBlock: 'latest',
+      filter: {
+        _metaEvidenceID: transactionID
+      }
+    })
+
+    if (metaEvidenceEvents.length < 1)
+      throw new Error(`No MetaEvidece for dispute ${disputeID}`)
+
+    const metaEvidenceJSON = await axios.get(metaEvidenceEvents[0].returnValues._evidence.replace(
+      /^\/ipfs\//,
+      'https://ipfs.kleros.io/ipfs/'
+    ))
+    transaction.totalAmount = metaEvidenceJSON.data.amount
+
     for (const eventLog of paymentEvents) {
       const timestamp = (await web3.eth.getBlock(eventLog.blockNumber)).timestamp * 1000
       const direction = eventLog.returnValues._party === transaction.sender ? 'payments' : 'reimbursements'
@@ -78,9 +94,7 @@ class EscrowDisplay extends Component {
         'amount': web3.utils.fromWei(eventLog.returnValues._amount),
         timestamp
       })
-      totalAmount.add(web3.utils.toBN(eventLog.returnValues._amount))
     }
-    transaction.totalAmount = web3.utils.fromWei(totalAmount.toString())
 
     this.setState({ transaction })
   }
