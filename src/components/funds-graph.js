@@ -87,7 +87,8 @@ function roundToTwo(num) {
 const FundsGraph = ({
   totalAmount,
   payments,
-  refunded
+  refunded,
+  denomination = 'ETH'
 }) => {
   const payedPercentage = Math.round(Number(payments * 100) / Number(totalAmount))
   const refundedPercentage = Math.round(Number(refunded * 100) / Number(totalAmount))
@@ -103,15 +104,15 @@ const FundsGraph = ({
   return (
     <StyledBarContainer>
       <StyledBarCol style={{width: `${payedPercentage}%`, color: "#009AFF", marginLeft: "0px"}}>
-        <StyledPercentage>{payedPercentage > 0 ? `${payedPercentage}% - ${roundToTwo(payments)} ETH` : ''}</StyledPercentage>
+        <StyledPercentage>{payedPercentage > 0 ? `${payedPercentage}% - ${roundToTwo(payments)} ${denomination}` : ''}</StyledPercentage>
         <PayedAmountBar />
       </StyledBarCol>
       <LockedContainerClass style={{width: `${lockedPercentage}%`, color: "#F60C36"}}>
-        <StyledPercentage>{lockedPercentage > 0 ? `${lockedPercentage}% - ${roundToTwo(Number(totalAmount) - Number(payments) - Number(refunded))} ETH` : ''}</StyledPercentage>
+        <StyledPercentage>{lockedPercentage > 0 ? `${lockedPercentage}% - ${roundToTwo(Number(totalAmount) - Number(payments) - Number(refunded))} ${denomination}` : ''}</StyledPercentage>
         <LockedAmountBar />
       </LockedContainerClass>
       <StyledBarCol style={{width: `${refundedPercentage}%`, color: "#4D00B4"}}>
-        <StyledPercentage>{refundedPercentage > 0 ? `${refundedPercentage}% - ${roundToTwo(refunded)} ETH` : ''}</StyledPercentage>
+        <StyledPercentage>{refundedPercentage > 0 ? `${refundedPercentage}% - ${roundToTwo(refunded)} ${denomination}` : ''}</StyledPercentage>
         <ReimbursedAmountBar />
       </StyledBarCol>
       <IndexContainer style={{color: "#009AFF"}}>

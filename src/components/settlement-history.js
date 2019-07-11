@@ -22,7 +22,8 @@ const Title = styled.div`
 const SettlementHistory = ({
   totalAmount,
   payments,
-  refunded
+  refunded,
+  denomination
 }) => {
   const allTransactions = []
   for (const payment of payments) {
@@ -42,7 +43,7 @@ const SettlementHistory = ({
     <SettlementHistoryContainer>
       <TextContainer>
         <Title>Settlement History</Title>
-        <SettlementList settlements={allTransactions} />
+        <SettlementList settlements={allTransactions} denomination={denomination} />
       </TextContainer>
     </SettlementHistoryContainer>
   )

@@ -84,6 +84,7 @@ class EscrowDisplay extends Component {
       'https://ipfs.kleros.io/ipfs/'
     ))
     transaction.totalAmount = metaEvidenceJSON.data.amount
+    transaction.denomination = (metaEvidenceJSON.data.token ? metaEvidenceJSON.data.token.ticker : 'ETH')
 
     for (const eventLog of paymentEvents) {
       const timestamp = (await web3.eth.getBlock(eventLog.blockNumber)).timestamp * 1000
@@ -109,9 +110,9 @@ class EscrowDisplay extends Component {
     return (
       <div>
         <EscrowEvidence>
-          <FundsGraph totalAmount={transaction.totalAmount} payments={totalPayments} refunded={totalReimbursed} style={{marginBottom: 47}}/>
+          <FundsGraph totalAmount={transaction.totalAmount} payments={totalPayments} refunded={totalReimbursed} denomination={transaction.denomination} style={{marginBottom: 47}}/>
         </EscrowEvidence>
-        <SettlementHistory totalAmount={transaction.totalAmount} payments={transaction.payments} refunded={transaction.reimbursements} />
+        <SettlementHistory totalAmount={transaction.totalAmount} payments={transaction.payments} denomination={transaction.denomination} refunded={transaction.reimbursements} />
       </div>
     )
   }

@@ -30,7 +30,8 @@ const ListText = styled.div`
 `
 
 const SettlementList = ({
-  settlements
+  settlements,
+  denomination
 }) => {
   const orderedTransactions = _.sortBy(settlements, 'timestamp', 'asc')
 
@@ -44,7 +45,7 @@ const SettlementList = ({
         </ListDate>
         <Delimiter>|</Delimiter>
         <ListText>
-          {`The ${tx.side} ${tx.side == 'sender' ? "unlocked" : "waived"} ${tx.amount} ETH (${tx.percentage}% of the total amount)`}
+          {`The ${tx.side} ${tx.side == 'sender' ? "unlocked" : "waived"} ${tx.amount} ${denomination} (${tx.percentage}% of the total amount)`}
         </ListText>
       </ListItem>
     )
