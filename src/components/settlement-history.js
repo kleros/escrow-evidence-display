@@ -39,6 +39,8 @@ const SettlementHistory = ({
     allTransactions.push(_refund)
   }
 
+  if (allTransactions.length === 0) return null
+
   return (
     <SettlementHistoryContainer>
       <TextContainer>
