@@ -80,8 +80,19 @@ const Circle = styled.div`
   vertical-align: top;
 `
 
-function roundToTwo(num) {
-    return +(Math.round(num + "e+2")  + "e-2");
+/**
+ * For amounts we want to do either: whole number with n decimal places or
+ * n significant figures. This is to display small amounts.
+ */
+export const truncateAmount = (amount, places) => {
+  amount = parseFloat(amount)
+  if (amount >= 1) {
+    return parseFloat(
+      parseFloat(amount).toFixed(places)
+    ).toString()
+  } else {
+    return parseFloat(Number.parseFloat(amount).toPrecision(places)).toString()
+  }
 }
 
 const FundsGraph = ({
@@ -104,15 +115,15 @@ const FundsGraph = ({
   return (
     <StyledBarContainer>
       <StyledBarCol style={{width: `${payedPercentage}%`, color: "#009AFF", marginLeft: "0px"}}>
-        <StyledPercentage>{payedPercentage > 0 ? `${payedPercentage}% - ${roundToTwo(payments)} ${denomination}` : ''}</StyledPercentage>
+        <StyledPercentage>{payedPercentage > 0 ? `${payedPercentage}% - ${truncateAmount(payments, 2)} ${denomination}` : ''}</StyledPercentage>
         <PayedAmountBar />
       </StyledBarCol>
       <LockedContainerClass style={{width: `${lockedPercentage}%`, color: "#F60C36"}}>
-        <StyledPercentage>{lockedPercentage > 0 ? `${lockedPercentage}% - ${roundToTwo(Number(totalAmount) - Number(payments) - Number(refunded))} ${denomination}` : ''}</StyledPercentage>
+        <StyledPercentage>{lockedPercentage > 0 ? `${lockedPercentage}% - ${truncateAmount(Number(totalAmount) - Number(payments) - Number(refunded), 2)} ${denomination}` : ''}</StyledPercentage>
         <LockedAmountBar />
       </LockedContainerClass>
       <StyledBarCol style={{width: `${refundedPercentage}%`, color: "#4D00B4"}}>
-        <StyledPercentage>{refundedPercentage > 0 ? `${refundedPercentage}% - ${roundToTwo(refunded)} ${denomination}` : ''}</StyledPercentage>
+        <StyledPercentage>{refundedPercentage > 0 ? `${refundedPercentage}% - ${truncateAmount(refunded, 2)} ${denomination}` : ''}</StyledPercentage>
         <ReimbursedAmountBar />
       </StyledBarCol>
       <IndexContainer style={{color: "#009AFF"}}>
